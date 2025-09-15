@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Lease Details</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2>Lease Details</h2>
+            <div class="details-card">
+                <h3>Tenant: <%= lease.tenant.firstName %> <%= lease.tenant.lastName %></h3>
+                <p><strong>Property:</strong> <%= lease.room.property.name %></p>
+                <p><strong>Room:</strong> <%= lease.room.roomNumber %></p>
+                <p><strong>Start Date:</strong> <%= lease.startDate.toLocaleDateString() %></p>
+                <p><strong>End Date:</strong> <%= lease.endDate.toLocaleDateString() %></p>
+                <p><strong>Rent Amount:</strong> $<%= lease.rentAmount.toFixed(2) %></p>
+                <p><strong>Deposit Paid:</strong> $<%= lease.depositPaid ? lease.depositPaid.toFixed(2) : 'N/A' %></p>
+            </div>
+            
+            <h3>Payment History</h3>
+            <% if (lease.payments.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% lease.payments.forEach(payment => { %>
+                            <tr>
+                                <td><%= payment.paymentDate.toLocaleDateString() %></td>
+                                <td>$<%= payment.amount.toFixed(2) %></td>
+                                <td><%= payment.status %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No payments recorded for this lease.</p>
+            <% } %>
+            
+            <a href="/leases/<%= lease.id %>/edit" class="btn">Edit Lease</a>
+            <a href="/leases" class="btn">Back to Leases</a>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

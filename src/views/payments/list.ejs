@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Payments</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2>Payment Records <a href="/payments/new" class="btn">Record New Payment</a></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lease ID</th>
+                        <th>Tenant</th>
+                        <th>Property & Room</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Payment For Month</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% payments.forEach(payment => { %>
+                        <tr>
+                            <td><%= payment.lease.id %></td>
+                            <td><%= payment.lease.tenant.firstName %> <%= payment.lease.tenant.lastName %></td>
+                            <td><%= payment.lease.room.property.name %> - Room <%= payment.lease.room.roomNumber %></td>
+                            <td>$<%= payment.amount.toFixed(2) %></td>
+                            <td><%= payment.paymentDate.toLocaleDateString() %></td>
+                            <td><%= payment.paymentForMonth.toLocaleDateString() %></td>
+                            <td><%= payment.status %></td>
+                            <td>
+                                <a href="/payments/<%= payment.id %>">View</a>
+                                <a href="/payments/<%= payment.id %>/edit">Edit</a>
+                                <form action="/payments/<%= payment.id %>/delete" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

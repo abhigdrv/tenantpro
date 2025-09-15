@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Property Details</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2>Property Details</h2>
+            <div class="details-card">
+                <h3><%= property.name %></h3>
+                <p><strong>Address:</strong> <%= property.address %></p>
+                <p><strong>City:</strong> <%= property.city %>, <%= property.state %> <%= property.zipCode %></p>
+                <p><strong>Description:</strong> <%= property.description %></p>
+            </div>
+            
+            <h3>Rooms <a href="/properties/<%= property.id %>/rooms/new" class="btn">Add New Room</a></h3>
+            <% if (property.rooms.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Room Number</th>
+                            <th>Status</th>
+                            <th>Rent Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% property.rooms.forEach(room => { %>
+                            <tr>
+                                <td><%= room.roomNumber %></td>
+                                <td><%= room.status %></td>
+                                <td>$<%= room.rentAmount.toFixed(2) %></td>
+                                <td>
+                                    <a href="/properties/<%= property.id %>/rooms/<%= room.id %>/edit">Edit</a>
+                                    <form action="/properties/<%= property.id %>/rooms/<%= room.id %>/delete" method="post" style="display:inline;">
+                                        <button type="submit" class="btn-delete">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No rooms found for this property. Add one now!</p>
+            <% } %>
+            
+            <a href="/properties" class="btn">Back to Properties</a>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

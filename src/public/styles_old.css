@@ -1,0 +1,335 @@
+/* src/public/styles.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f9;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5em 1em;
+}
+
+main {
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #222;
+    color: #fff;
+    height: calc(100vh - 60px);
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 1em 0;
+    border-bottom: 1px solid #444;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 2em;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1em;
+    margin-bottom: 2em;
+}
+
+.metric-card {
+    background-color: #fff;
+    padding: 1.5em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.login-container {
+    width: 350px;
+    margin: 100px auto;
+    padding: 2em;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.login-container h1, .login-container h2 {
+    color: #333;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1.5em;
+}
+
+.login-container input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.login-container button {
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 1em;
+}
+
+
+
+/* src/public/styles.css (add to existing code) */
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    margin-top: 2em;
+}
+
+.chart-box {
+    background-color: #fff;
+    padding: 1.5em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 400px;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+/* General Form Container */
+.content h2 {
+    margin-top: 0;
+    margin-bottom: 1em;
+    font-size: 1.8em;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+/* Labels */
+.form-group label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Input Fields and Textareas */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+    transition: border-color 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #007bff; /* Highlight focus with a blue border */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Textarea specific styles */
+textarea {
+    resize: vertical; /* Allows vertical resizing of the textarea */
+    min-height: 100px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+
+/* General Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Removes the space between cells */
+    margin-top: 1.5em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures the table border-radius works */
+}
+
+/* Table Headers */
+table thead {
+    background-color: #007bff;
+    color: #fff;
+    text-align: left;
+}
+
+table th,
+table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+/* Table Body Rows */
+table tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Zebra-striping for readability */
+}
+
+table tbody tr:hover {
+    background-color: #e9ecef; /* Highlight row on hover */
+    cursor: pointer;
+}
+
+/* Actions Column Styling */
+table td a,
+table td form {
+    margin-right: 10px;
+}
+
+table td a.btn,
+table td button.btn-delete {
+    padding: 6px 12px;
+    font-size: 0.85em;
+}
+
+/* Action Buttons */
+.btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Add New Button on top of lists */
+.content h2 .btn {
+    float: right;
+    font-size: 0.9em;
+    padding: 8px 16px;
+    background-color: #28a745;
+}
+
+.content h2 .btn:hover {
+    background-color: #218838;
+}
+
+
+/* Details Card */
+.details-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2em;
+    margin-bottom: 2em;
+}
+
+.details-card h3 {
+    margin-top: 0;
+    font-size: 1.8em;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+}
+
+.details-card p {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 0.8em;
+}
+
+.details-card p strong {
+    color: #333;
+}
+
+/* Button Group for View Pages */
+.action-buttons {
+    display: flex;
+    gap: 1em;
+    margin-top: 2em;
+}

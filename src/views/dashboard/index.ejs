@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+        <title>Dashboard</title>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+        <main>
+            <%- include('../partials/sidebar') %>
+                <section class="content">
+                    <h2>Dashboard Overview</h2>
+                    <div class="metrics">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <i data-lucide="building-2" class="metric-icon"></i>
+                                <h3>Total Properties</h3>
+                            </div>
+                            <p>
+                                <%= metrics.totalProperties %>
+                            </p>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <i data-lucide="users" class="metric-icon"></i>
+                                <h3>Total Tenants</h3>
+                            </div>
+                            <p>
+                                <%= metrics.totalTenants %>
+                            </p>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <i data-lucide="key" class="metric-icon"></i>
+                                <h3>Occupied Rooms</h3>
+                            </div>
+                            <p>
+                                <%= metrics.occupiedRooms %>
+                            </p>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <i data-lucide="door-open" class="metric-icon"></i>
+                                <h3>Vacant Rooms</h3>
+                            </div>
+                            <p>
+                                <%= metrics.vacantRooms %>
+                            </p>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <i data-lucide="dollar-sign" class="metric-icon"></i>
+                                <h3>Total Rent Collected</h3>
+                            </div>
+                            <p>$<%= metrics.totalRent.toFixed(2) %>
+                            </p>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <i data-lucide="alert-circle" class="metric-icon"></i>
+                                <h3>Overdue Payments</h3>
+                            </div>
+                            <p>
+                                <%= metrics.overduePayments %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="charts-container">
+                        <div class="chart-box">
+                            <h3>Monthly Rent Payments</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="monthlyRentChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-box">
+                            <h3>Maintenance Status</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="maintenanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+        </main>
+        <%- include('../partials/footer') %>
+            <script>
+                const monthlyRentData = <% - JSON.stringify(monthlyPayments) %>;
+                const maintenanceData = <% - JSON.stringify(maintenanceRequests) %>;
+
+                // Monthly Rent Chart
+                const monthlyLabels = monthlyRentData.map(d => d.date);
+                const monthlyAmounts = monthlyRentData.map(d => d.amount);
+
+                new Chart(document.getElementById('monthlyRentChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: monthlyLabels,
+                        datasets: [{
+                            label: 'Rent Paid',
+                            data: monthlyAmounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+
+                // Maintenance Status Chart
+                const maintenanceLabels = maintenanceData.map(d => d.status.replace(/_/g, ' '));
+                const maintenanceCounts = maintenanceData.map(d => d._count.status);
+
+                new Chart(document.getElementById('maintenanceChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: maintenanceLabels,
+                        datasets: [{
+                            label: 'Requests',
+                            data: maintenanceCounts,
+                            backgroundColor: ['#4bc0c0', '#ff6384', '#ffcd56'],
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            </script>
+</body>
+
+</html>

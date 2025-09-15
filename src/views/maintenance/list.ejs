@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Maintenance</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2>Maintenance Requests <a href="/maintenance/new" class="btn">Submit New Request</a></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Property</th>
+                        <th>Tenant</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% requests.forEach(request => { %>
+                        <tr>
+                            <td><%= request.title %></td>
+                            <td><%= request.property.name %></td>
+                            <td><%= request.tenant.firstName %> <%= request.tenant.lastName %></td>
+                            <td><%= request.priority %></td>
+                            <td><%= request.status %></td>
+                            <td>
+                                <a href="/maintenance/<%= request.id %>">View</a>
+                                <a href="/maintenance/<%= request.id %>/edit">Edit</a>
+                                <form action="/maintenance/<%= request.id %>/delete" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

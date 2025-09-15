@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title><%= title %></title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2><%= title %> for <%= property.name %></h2>
+            <form action="/properties/<%= property.id %>/rooms/<%= room ? room.id + '/edit' : '' %>" method="POST">
+                <div class="form-group">
+                    <label for="roomNumber">Room Number:</label>
+                    <input type="text" name="roomNumber" id="roomNumber" value="<%= room ? room.roomNumber : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="rentAmount">Rent Amount:</label>
+                    <input type="number" step="0.01" name="rentAmount" id="rentAmount" value="<%= room ? room.rentAmount : '' %>" required>
+                </div>
+                <% if (room) { %>
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <select name="status" id="status" required>
+                            <option value="occupied" <%= room.status === 'occupied' ? 'selected' : '' %>>Occupied</option>
+                            <option value="vacant" <%= room.status === 'vacant' ? 'selected' : '' %>>Vacant</option>
+                            <option value="maintenance" <%= room.status === 'maintenance' ? 'selected' : '' %>>Maintenance</option>
+                        </select>
+                    </div>
+                <% } %>
+                <button type="submit" class="btn">Save Room</button>
+            </form>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

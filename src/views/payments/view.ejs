@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Payment Details</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2>Payment Details</h2>
+            <div class="details-card">
+                <h3>Payment for Lease #<%= payment.lease.id %></h3>
+                <p><strong>Tenant:</strong> <%= payment.lease.tenant.firstName %> <%= payment.lease.tenant.lastName %></p>
+                <p><strong>Property:</strong> <%= payment.lease.room.property.name %> - Room <%= payment.lease.room.roomNumber %></p>
+                <p><strong>Amount:</strong> $<%= payment.amount.toFixed(2) %></p>
+                <p><strong>Date:</strong> <%= payment.paymentDate.toLocaleDateString() %></p>
+                <p><strong>Status:</strong> <%= payment.status %></p>
+            </div>
+            <a href="/payments/<%= payment.id %>/edit" class="btn">Edit Record</a>
+            <a href="/payments" class="btn">Back to Payments</a>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

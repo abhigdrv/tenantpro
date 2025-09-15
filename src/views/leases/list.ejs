@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Leases</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2>Lease Agreements <a href="/leases/new" class="btn">Add New</a></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tenant</th>
+                        <th>Property & Room</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Rent Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% leases.forEach(lease => { %>
+                        <tr>
+                            <td><%= lease.tenant.firstName %> <%= lease.tenant.lastName %></td>
+                            <td><%= lease.room.property.name %> - Room <%= lease.room.roomNumber %></td>
+                            <td><%= lease.startDate.toLocaleDateString() %></td>
+                            <td><%= lease.endDate.toLocaleDateString() %></td>
+                            <td>$<%= lease.rentAmount.toFixed(2) %></td>
+                            <td>
+                                <a href="/leases/<%= lease.id %>">View</a>
+                                <a href="/leases/<%= lease.id %>/edit">Edit</a>
+                                <form action="/leases/<%= lease.id %>/delete" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Tenants</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <h2>Tenants <a href="/tenants/new" class="btn">Add New</a></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% tenants.forEach(tenant => { %>
+                        <tr>
+                            <td><%= tenant.firstName %> <%= tenant.lastName %></td>
+                            <td><%= tenant.email %></td>
+                            <td><%= tenant.phone %></td>
+                            <td>
+                                <a href="/tenants/<%= tenant.id %>">View</a>
+                                <a href="/tenants/<%= tenant.id %>/edit">Edit</a>
+                                <form action="/tenants/<%= tenant.id %>/delete" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>
