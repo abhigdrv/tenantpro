@@ -32,7 +32,24 @@
                         <% property.rooms.forEach(room => { %>
                             <tr>
                                 <td><%= room.roomNumber %></td>
-                                <td><%= room.status %></td>
+                                <td>
+                                    <% if (room.status === 'occupied') { %>
+    <span class="badge badge-success">
+        <i data-lucide="user-check"></i>
+        <span>Occupied</span>
+    </span>
+<% } else if (room.status === 'vacant') { %>
+    <span class="badge badge-info">
+        <i data-lucide="door-open"></i>
+        <span>Vacant</span>
+    </span>
+<% } else if (room.status === 'maintenance') { %>
+    <span class="badge badge-warning">
+        <i data-lucide="wrench"></i>
+        <span>Maintenance</span>
+    </span>
+<% } %>
+                                </td>
                                 <td>$<%= room.rentAmount.toFixed(2) %></td>
                                 <td>
                                     <a href="/properties/<%= property.id %>/rooms/<%= room.id %>/edit">Edit</a>
@@ -48,7 +65,10 @@
                 <p>No rooms found for this property. Add one now!</p>
             <% } %>
             
-            <a href="/properties" class="btn">Back to Properties</a>
+            <a href="/properties" class="btn btn-secondary">
+    <i data-lucide="arrow-left"></i>
+    <span>Back to Properties</span>
+</a>
         </section>
     </main>
     <%- include('../partials/footer') %>

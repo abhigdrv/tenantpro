@@ -9,7 +9,10 @@
     <main>
         <%- include('../partials/sidebar') %>
         <section class="content">
-            <h2>Properties <a href="/properties/new" class="btn">Add New</a></h2>
+            <h2>Properties <a href="/properties/new" class="btn btn-primary">
+    <i data-lucide="plus"></i>
+    <span>Add New Property</span>
+</a></h2>
             <table>
                 <thead>
                     <tr>
@@ -26,10 +29,19 @@
                             <td><%= property.address %></td>
                             <td><%= property.rooms.length %></td>
                             <td>
-                                <a href="/properties/<%= property.id %>">View</a>
-                                <a href="/properties/<%= property.id %>/edit">Edit</a>
+                                <a href="/properties/<%= property.id %>" class="btn btn-sm btn-secondary">
+    <i data-lucide="eye"></i>
+    <span>View</span>
+</a>
+                                <a href="/properties/<%= property.id %>/edit" class="btn btn-sm btn-secondary">
+    <i data-lucide="edit"></i>
+    <span>Edit</span>
+</a>
                                 <form action="/properties/<%= property.id %>/delete" method="post" style="display:inline;">
-                                    <button type="submit" class="btn-delete">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-delete">
+    <i data-lucide="trash-2"></i>
+    <span>Delete</span>
+</button>
                                 </form>
                             </td>
                         </tr>

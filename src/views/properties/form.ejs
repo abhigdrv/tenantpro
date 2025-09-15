@@ -35,7 +35,10 @@
                     <label for="description">Description:</label>
                     <textarea name="description" id="description" rows="5"><%= property ? property.description : '' %></textarea>
                 </div>
-                <button type="submit" class="btn">Save Property</button>
+                <button type="submit" class="btn btn-primary">
+    <i data-lucide="save"></i>
+    <span>Save Property</span>
+</button>
             </form>
         </section>
     </main>

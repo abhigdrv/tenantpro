@@ -32,12 +32,31 @@
                             <td>$<%= payment.amount.toFixed(2) %></td>
                             <td><%= payment.paymentDate.toLocaleDateString() %></td>
                             <td><%= payment.paymentForMonth.toLocaleDateString() %></td>
-                            <td><%= payment.status %></td>
-                            <td>
-                                <a href="/payments/<%= payment.id %>">View</a>
-                                <a href="/payments/<%= payment.id %>/edit">Edit</a>
+                            <td><% if (payment.status === 'paid') { %>
+    <span class="badge badge-success">
+        <i data-lucide="check-circle"></i>
+        <span>Paid</span>
+    </span>
+<% } else { %>
+    <span class="badge badge-danger">
+        <i data-lucide="alert-circle"></i>
+        <span>Overdue</span>
+    </span>
+<% } %></td>
+                            <td class="inline-flex">
+                                <a href="/payments/<%= payment.id %>" class="btn btn-sm btn-secondary">
+    <i data-lucide="eye"></i>
+    <span>View</span>
+</a>
+                                <a href="/payments/<%= payment.id %>/edit" class="btn btn-sm btn-secondary">
+    <i data-lucide="edit"></i>
+    <span>Edit</span>
+</a>
                                 <form action="/payments/<%= payment.id %>/delete" method="post" style="display:inline;">
-                                    <button type="submit" class="btn-delete">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-delete">
+    <i data-lucide="trash-2"></i>
+    <span>Delete</span>
+</button>
                                 </form>
                             </td>
                         </tr>
