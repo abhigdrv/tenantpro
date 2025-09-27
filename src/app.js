@@ -46,6 +46,8 @@ app.use('/leases', requireAuth, leaseRoutes);
 app.use('/payments', requireAuth, paymentRoutes);
 app.use('/maintenance', requireAuth, maintenanceRoutes);
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Server is running on http://localhost:${port}`);
+// });
+
+module.exports = app;
