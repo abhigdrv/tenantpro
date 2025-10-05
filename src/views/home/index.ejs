@@ -1,0 +1,425 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Perfect Property</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .dashboard-btn {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            max-width: 1000px;
+            margin: -3rem auto 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        /* Properties Section */
+        .properties-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .section-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .property-content {
+            padding: 1.5rem;
+        }
+
+        .property-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .property-location {
+            color: #666;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .property-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .view-details {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .view-details:hover {
+            color: #764ba2;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🏠 PG Dhundho</a>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="#properties">Properties</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="/dashboard" class="dashboard-btn">Agent Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Find Your Perfect Property</h1>
+        <p>Discover the best properties in your desired location</p>
+    </section>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form id="filterForm" method="GET" action="/">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" placeholder="Enter city" value="<%= filters.city || '' %>">
+                </div>
+                <div class="filter-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" name="state" placeholder="Enter state" value="<%= filters.state || '' %>">
+                </div>
+                <div class="filter-group">
+                    <label for="minRent">Min Rent</label>
+                    <input type="number" id="minRent" name="minRent" placeholder="$0" value="<%= filters.minRent || '' %>">
+                </div>
+                <div class="filter-group">
+                    <label for="maxRent">Max Rent</label>
+                    <input type="number" id="maxRent" name="maxRent" placeholder="Any" value="<%= filters.maxRent || '' %>">
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button type="submit" class="btn btn-primary">Search Properties</button>
+                <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Properties Section -->
+    <section class="properties-section" id="properties">
+        <div class="section-header">
+            <h2>Available Properties</h2>
+            <p>Browse through our collection of quality properties</p>
+        </div>
+
+        <% if (properties && properties.length > 0) { %>
+            <div class="properties-grid">
+                <% properties.forEach(property => { %>
+                    <div class="property-card">
+                        <div class="property-image">
+                            📍 Property Image
+                        </div>
+                        <div class="property-content">
+                            <h3 class="property-title"><%= property.name %></h3>
+                            <p class="property-location">
+                                📍 <%= property.address %>, <%= property.city %>, <%= property.state %> <%= property.zipCode %>
+                            </p>
+                            <% if (property.description) { %>
+                                <p style="color: #666; font-size: 0.9rem;"><%= property.description.substring(0, 100) %>...</p>
+                            <% } %>
+                            <div class="property-info">
+                                <div class="info-item">
+                                    <div class="info-label">Available Rooms</div>
+                                    <div class="info-value"><%= property.rooms ? property.rooms.length : 0 %></div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Starting From</div>
+                                    <div class="info-value">
+                                        <% if (property.rooms && property.rooms.length > 0) { %>
+                                            $<%= Math.min(...property.rooms.map(r => r.rentAmount)) %>
+                                        <% } else { %>
+                                            N/A
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/properties/<%= property.id %>" class="view-details">View Details →</a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="no-results">
+                <p>No properties found matching your criteria.</p>
+                <button class="btn btn-primary" style="margin-top: 1rem;" onclick="clearFilters()">Clear Filters</button>
+            </div>
+        <% } %>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 PgDhundho. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function clearFilters() {
+            document.getElementById('filterForm').reset();
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

@@ -7,8 +7,58 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 // GET / - Redirect to login
-router.get('/', (req, res) => {
-    res.redirect('/login');
+router.get('/', async (req, res) => {
+    const { city, state, minRent, maxRent } = req.query;
+    
+    let whereClause = {};
+    if (city) whereClause.city = { contains: city};
+    if (state) whereClause.state = { contains: state};
+    
+    const properties = await prisma.property.findMany({
+        where: whereClause,
+        include: { rooms: true }
+    });
+    
+    // Filter by rent if specified
+    let filteredProperties = properties;
+    if (minRent || maxRent) {
+        filteredProperties = properties.filter(prop => {
+            const rents = prop.rooms.map(r => r.rentAmount);
+            const minPropRent = Math.min(...rents);
+            if (minRent && minPropRent < parseFloat(minRent)) return false;
+            if (maxRent && minPropRent > parseFloat(maxRent)) return false;
+            return true;
+        });
+    }
+    
+    res.render('home/index', { 
+        properties: filteredProperties, 
+        filters: req.query 
+    });
+});
+
+router.get('/properties/:id', async (req, res) => {
+    try {
+        const property = await prisma.property.findUnique({
+            where: { id: parseInt(req.params.id) },
+            include: { 
+                rooms: {
+                    orderBy: {
+                        roomNumber: 'asc'
+                    }
+                }
+            },
+        });
+        
+        if (!property) {
+            return res.status(404).send('Property not found.');
+        }
+        
+        res.render('home/properties', { property });
+    } catch (error) {
+        console.error('Error fetching property:', error);
+        res.status(500).send('Error loading property details.');
+    }
 });
 
 // GET /login - Login Page

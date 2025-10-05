@@ -1,0 +1,526 @@
+<!-- views/properties/view.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= property.name %> - PgDhundho</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        /* Property Main Content */
+        .property-main {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .property-hero {
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .property-hero::after {
+            content: '📸';
+            position: absolute;
+            font-size: 4rem;
+        }
+
+        .property-content {
+            padding: 2rem;
+        }
+
+        .property-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .property-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .property-details {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem;
+            color: #333;
+        }
+
+        .description {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Rooms Section */
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .room-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .room-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .room-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .room-rent {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.75rem;
+        }
+
+        .room-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-AVAILABLE {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-OCCUPIED {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-MAINTENANCE {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .no-rooms {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        /* Contact Card */
+        .contact-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            color: white;
+        }
+
+        .contact-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .contact-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .contact-info {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .info-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .page-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-card {
+                position: relative;
+                top: 0;
+            }
+
+            .property-title {
+                font-size: 2rem;
+            }
+
+            .property-hero {
+                height: 300px;
+            }
+
+            .rooms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🏠 PgDhundho</a>
+            <a href="/" class="back-btn">← Back to Properties</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-layout">
+            <!-- Property Main Content -->
+            <div class="property-main">
+                <div class="property-hero"></div>
+                
+                <div class="property-content">
+                    <div class="property-header">
+                        <h1 class="property-title"><%= property.name %></h1>
+                        <div class="property-location">
+                            <span>📍</span>
+                            <span><%= property.address %>, <%= property.city %>, <%= property.state %> <%= property.zipCode %></span>
+                        </div>
+                    </div>
+
+                    <div class="property-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Total Rooms</span>
+                            <span class="detail-value"><%= property.rooms ? property.rooms.length : 0 %></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Available Rooms</span>
+                            <span class="detail-value">
+                                <%= property.rooms ? property.rooms.filter(r => r.status === 'AVAILABLE').length : 0 %>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Rent Range</span>
+                            <span class="detail-value">
+                                <% if (property.rooms && property.rooms.length > 0) { %>
+                                    $<%= Math.min(...property.rooms.map(r => r.rentAmount)) %> - 
+                                    $<%= Math.max(...property.rooms.map(r => r.rentAmount)) %>/month
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Property ID</span>
+                            <span class="detail-value">#<%= property.id %></span>
+                        </div>
+                    </div>
+
+                    <% if (property.description) { %>
+                        <h2 class="section-title">About This Property</h2>
+                        <p class="description"><%= property.description %></p>
+                    <% } %>
+
+                    <h2 class="section-title">Available Rooms</h2>
+                    <% if (property.rooms && property.rooms.length > 0) { %>
+                        <div class="rooms-grid">
+                            <% property.rooms.forEach(room => { %>
+                                <div class="room-card">
+                                    <div class="room-number">Room <%= room.roomNumber %></div>
+                                    <div class="room-rent">$<%= room.rentAmount.toFixed(2) %></div>
+                                    <span class="room-status status-<%= room.status %>">
+                                        <%= room.status || 'AVAILABLE' %>
+                                    </span>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <div class="no-rooms">
+                            <p>No rooms listed for this property yet.</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Contact Card -->
+            <aside>
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="contact-icon">💬</div>
+                        <h3 class="contact-title">Interested?</h3>
+                        <p class="contact-subtitle">Get in touch with us</p>
+                    </div>
+
+                    <form class="contact-form" action="/contact" method="POST">
+                        <input type="hidden" name="propertyId" value="<%= property.id %>">
+                        <input type="hidden" name="propertyName" value="<%= property.name %>">
+                        
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required placeholder="John Doe">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="+1 (555) 000-0000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="I'm interested in this property..."></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Send Inquiry</button>
+                    </form>
+
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <span class="info-icon">📧</span>
+                            <span>info@pgdhundho.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">📞</span>
+                            <span>+1 (555) 123-4567</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">🕐</span>
+                            <span>Mon-Fri: 9AM - 6PM</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 PgDhundho. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Form submission handling
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // You can add AJAX submission here if needed
+            alert('Thank you for your inquiry! We will contact you soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
