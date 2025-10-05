@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Payments Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filters {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .filters form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .summary-card h4 {
+            margin: 0 0 10px 0;
+            color: #666;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+        
+        .summary-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .summary-card .label {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .chart-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .status-badge.paid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-badge.overdue {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .amount-paid {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .amount-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <div class="report-header">
+                <h2>Payments Report</h2>
+                <a href="/agent/reports/export/payments" class="btn btn-success">📥 Export CSV</a>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <form action="/agent/reports/payments" method="GET">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="">All Statuses</option>
+                            <option value="paid" <%= filters.status === 'paid' ? 'selected' : '' %>>Paid</option>
+                            <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Start Date</label>
+                        <input type="date" name="startDate" value="<%= filters.startDate || '' %>">
+                    </div>
+                    <div class="filter-group">
+                        <label>End Date</label>
+                        <input type="date" name="endDate" value="<%= filters.endDate || '' %>">
+                    </div>
+                    <div class="filter-group">
+                        <button type="submit" class="btn">Apply Filters</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Summary Statistics -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h4>Total Payments</h4>
+                    <div class="value" style="color: #007bff;"><%= summary.total %></div>
+                    <div class="label">All Transactions</div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Total Amount</h4>
+                    <div class="value" style="color: #333;">₹<%= summary.totalAmount.toLocaleString() %></div>
+                    <div class="label">Combined Total</div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Paid</h4>
+                    <div class="value" style="color: #28a745;"><%= summary.paid %></div>
+                    <div class="label">₹<%= summary.paidAmount.toLocaleString() %></div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Pending</h4>
+                    <div class="value" style="color: #ffc107;"><%= summary.pending %></div>
+                    <div class="label">₹<%= summary.pendingAmount.toLocaleString() %></div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Collection Rate</h4>
+                    <div class="value" style="color: #17a2b8;">
+                        <%= summary.totalAmount > 0 ? ((summary.paidAmount / summary.totalAmount) * 100).toFixed(1) : 0 %>%
+                    </div>
+                    <div class="label">Payment Success</div>
+                </div>
+            </div>
+
+            <!-- Payment Status Chart -->
+            <div class="chart-section">
+                <h3>Payment Status Distribution</h3>
+                <div style="max-width: 400px; margin: 0 auto;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Payments Table -->
+            <h3 style="margin-bottom: 15px;">Payment Details (<%= payments.length %> records)</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Payment Date</th>
+                            <th>Tenant</th>
+                            <th>Property</th>
+                            <th>Room</th>
+                            <th>Amount</th>
+                            <th>Payment For</th>
+                            <th>Status</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (payments.length > 0) { %>
+                            <% payments.forEach(payment => { %>
+                                <tr>
+                                    <td><%= payment.paymentDate.toLocaleDateString() %></td>
+                                    <td><%= payment.lease.tenant.firstName %> <%= payment.lease.tenant.lastName %></td>
+                                    <td><%= payment.lease.room.property.name %></td>
+                                    <td><%= payment.lease.room.roomNumber %></td>
+                                    <td class="<%= payment.status === 'paid' ? 'amount-paid' : 'amount-pending' %>">
+                                        ₹<%= payment.amount.toLocaleString() %>
+                                    </td>
+                                    <td><%= payment.paymentForMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %></td>
+                                    <td>
+                                        <span class="status-badge <%= payment.status %>">
+                                            <%= payment.status.toUpperCase() %>
+                                        </span>
+                                    </td>
+                                    <td><%= payment.note || '-' %></td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 30px; color: #999;">
+                                    No payments found matching the selected criteria.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <a href="/agent/reports" class="btn btn-secondary">← Back to Dashboard</a>
+            </div>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+
+    <script>
+        // Payment Status Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Paid', 'Pending'],
+                datasets: [{
+                    data: [<%= summary.paid %>, <%= summary.pending %>],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(255, 193, 7, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(255, 193, 7, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

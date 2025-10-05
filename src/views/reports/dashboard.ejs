@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Reports Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .reports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+        
+        .stat-card.success { border-left-color: #28a745; }
+        .stat-card.warning { border-left-color: #ffc107; }
+        .stat-card.danger { border-left-color: #dc3545; }
+        .stat-card.info { border-left-color: #17a2b8; }
+        
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .chart-card h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+        
+        .reports-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .report-link {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .report-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .report-link i {
+            font-size: 2em;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .report-link h4 {
+            margin: 10px 0 0 0;
+            font-size: 1em;
+        }
+        
+        .occupancy-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .occupancy-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .occupancy-item:last-child {
+            border-bottom: none;
+        }
+        
+        .occupancy-bar {
+            flex: 1;
+            margin: 0 15px;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .occupancy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <div class="reports-header">
+                <h2>Reports Dashboard</h2>
+                <div>
+                    <span style="color: #666;">Last Updated: <%= new Date().toLocaleString() %></span>
+                </div>
+            </div>
+
+            <!-- Summary Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Properties</h3>
+                    <div class="stat-value"><%= summary.totalProperties %></div>
+                    <div class="stat-label"><%= summary.totalRooms %> Total Rooms</div>
+                </div>
+                
+                <div class="stat-card success">
+                    <h3>Occupancy Rate</h3>
+                    <div class="stat-value"><%= summary.occupancyRate %>%</div>
+                    <div class="stat-label"><%= summary.occupiedRooms %> / <%= summary.totalRooms %> Rooms</div>
+                </div>
+                
+                <div class="stat-card info">
+                    <h3>Active Leases</h3>
+                    <div class="stat-value"><%= summary.activeLeases %></div>
+                    <div class="stat-label"><%= summary.totalTenants %> Total Tenants</div>
+                </div>
+                
+                <div class="stat-card success">
+                    <h3>Monthly Revenue</h3>
+                    <div class="stat-value">₹<%= summary.monthlyRevenue.toLocaleString() %></div>
+                    <div class="stat-label">This Month</div>
+                </div>
+                
+                <div class="stat-card info">
+                    <h3>Yearly Revenue</h3>
+                    <div class="stat-value">₹<%= summary.yearlyRevenue.toLocaleString() %></div>
+                    <div class="stat-label">This Year</div>
+                </div>
+                
+                <div class="stat-card warning">
+                    <h3>Outstanding</h3>
+                    <div class="stat-value">₹<%= summary.outstandingAmount.toLocaleString() %></div>
+                    <div class="stat-label">Pending Payments</div>
+                </div>
+                
+                <div class="stat-card danger">
+                    <h3>Expiring Soon</h3>
+                    <div class="stat-value"><%= summary.expiringLeases %></div>
+                    <div class="stat-label">Leases in 30 Days</div>
+                </div>
+                
+                <div class="stat-card warning">
+                    <h3>Maintenance</h3>
+                    <div class="stat-value"><%= summary.openMaintenance %></div>
+                    <div class="stat-label">Open Requests</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <h3>Revenue Trend (Last 6 Months)</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Property Occupancy</h3>
+                    <ul class="occupancy-list">
+                        <% propertyOccupancy.forEach(prop => { %>
+                            <li class="occupancy-item">
+                                <strong><%= prop.name %></strong>
+                                <div class="occupancy-bar">
+                                    <div class="occupancy-fill" style="width: <%= prop.occupancyRate %>%"></div>
+                                </div>
+                                <span><%= prop.occupancyRate %>% (<%= prop.occupied %>/<%= prop.total %>)</span>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Reports Menu -->
+            <h3 style="margin-top: 40px; margin-bottom: 20px;">Available Reports</h3>
+            <div class="reports-menu">
+                <a href="/agent/reports/revenue" class="report-link">
+                    <div>💰</div>
+                    <h4>Revenue Report</h4>
+                </a>
+                
+                <a href="/agent/reports/payments" class="report-link">
+                    <div>💳</div>
+                    <h4>Payments Report</h4>
+                </a>
+                
+                <a href="/agent/reports/outstanding" class="report-link">
+                    <div>⚠️</div>
+                    <h4>Outstanding Payments</h4>
+                </a>
+                
+                <a href="/agent/reports/occupancy" class="report-link">
+                    <div>🏠</div>
+                    <h4>Occupancy Report</h4>
+                </a>
+                
+                <a href="/agent/reports/vacancy" class="report-link">
+                    <div>🔓</div>
+                    <h4>Vacancy Report</h4>
+                </a>
+                
+                <a href="/agent/reports/tenants" class="report-link">
+                    <div>👥</div>
+                    <h4>Tenants Report</h4>
+                </a>
+                
+                <a href="/agent/reports/lease-expiry" class="report-link">
+                    <div>📅</div>
+                    <h4>Lease Expiry</h4>
+                </a>
+                
+                <a href="/agent/reports/properties" class="report-link">
+                    <div>🏢</div>
+                    <h4>Properties Report</h4>
+                </a>
+                
+                <a href="/agent/reports/maintenance" class="report-link">
+                    <div>🔧</div>
+                    <h4>Maintenance Report</h4>
+                </a>
+            </div>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+
+    <script>
+        // Revenue Trend Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: <%= JSON.stringify(monthlyRevenue.map(m => m.month)) %>,
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: <%= JSON.stringify(monthlyRevenue.map(m => m.amount)) %>,
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

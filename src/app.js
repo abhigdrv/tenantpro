@@ -29,6 +29,7 @@ const tenantRoutes = require('./routes/tenants');
 const leaseRoutes = require('./routes/leases');
 const paymentRoutes = require('./routes/payments');
 const maintenanceRoutes = require('./routes/maintenance');
+const reportRoutes = require('./routes/reports');
 
 const requireAuth = (req, res, next) => {
     if (req.session.userId) {
@@ -45,6 +46,7 @@ app.use('/agent/tenants', requireAuth, tenantRoutes);
 app.use('/agent/leases', requireAuth, leaseRoutes);
 app.use('/agent/payments', requireAuth, paymentRoutes);
 app.use('/agent/maintenance', requireAuth, maintenanceRoutes);
+app.use('/agent/reports', requireAuth, reportRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

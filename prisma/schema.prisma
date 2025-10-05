@@ -61,6 +61,18 @@ model Lease {
   rentAmount Float
   depositPaid Float?
   payments   Payment[]
+  documents  LeaseDocument[]
+}
+
+model LeaseDocument {
+  id           Int      @id @default(autoincrement())
+  leaseId      Int
+  lease        Lease    @relation(fields: [leaseId], references: [id], onDelete: Cascade)
+  documentType String   // 'aadhar', 'pan', 'agreement', 'other'
+  fileName     String
+  filePath     String
+  uploadedAt   DateTime @default(now())
+  description  String?
 }
 
 model Payment {

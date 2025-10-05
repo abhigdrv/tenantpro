@@ -1,0 +1,370 @@
+
+<!-- views/reports/vacancy.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Vacancy Report</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .report-header {
+            margin-bottom: 30px;
+        }
+
+        .report-header h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 2em;
+        }
+
+        .report-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .overall-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            margin: 0 0 15px 0;
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .stat-box .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-box.warning .value {
+            color: #dc3545;
+        }
+
+        .stat-box.success .value {
+            color: #28a745;
+        }
+
+        .vacancy-group {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .group-header {
+            background: #f9f9f9;
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .group-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.3em;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            background: #f9f9f9;
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 0.9em;
+        }
+
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .text-success {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .text-muted {
+            color: #999;
+        }
+
+        .vacancy-summary-table {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .vacancy-summary-table h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        .table-total {
+            background: #f9f9f9;
+            font-weight: 600;
+        }
+
+        .table-total td {
+            border-top: 2px solid #333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        @media print {
+            .actions-bar,
+            .btn {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .overall-stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .stat-box .value {
+                font-size: 2em;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            table th,
+            table td {
+                padding: 10px 8px;
+            }
+
+            .group-header h3 {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <div class="report-header">
+                <h2>Vacancy Report</h2>
+                <p>Available rooms across all properties</p>
+            </div>
+
+            <div class="actions-bar">
+                <a href="/agent/reports" class="btn btn-secondary">← Back to Reports</a>
+                <button onclick="window.print()" class="btn btn-primary">Print Report</button>
+            </div>
+
+            <!-- Overall Statistics -->
+            <div class="overall-stats">
+                <div class="stat-box success">
+                    <h3>Potential Revenue</h3>
+                    <div class="value">₹<%= vacantRooms.reduce((sum, r) => sum + r.rentAmount, 0).toLocaleString() %></div>
+                </div>
+            </div>
+
+            <!-- Vacancy Details -->
+            <% if (vacantRooms.length === 0) { %>
+                <div class="empty-state">
+                    <p>No vacant rooms found. All rooms are currently occupied!</p>
+                </div>
+            <% } else { %>
+                <!-- Grouped by Property -->
+                <% Object.keys(vacancyByProperty).forEach(propertyName => { %>
+                    <div class="vacancy-group">
+                        <div class="group-header">
+                            <h3><%= propertyName %></h3>
+                            <span class="badge badge-info"><%= vacancyByProperty[propertyName].length %> vacant</span>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Room Number</th>
+                                        <th>Type</th>
+                                        <th>Floor</th>
+                                        <th>Monthly Rent</th>
+                                        <th>Size (sq ft)</th>
+                                        <th>Amenities</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% vacancyByProperty[propertyName].forEach(room => { %>
+                                        <tr>
+                                            <td><strong><%= room.roomNumber %></strong></td>
+                                            <td><%= room.roomType || 'N/A' %></td>
+                                            <td><%= room.floor || 'N/A' %></td>
+                                            <td class="text-success">₹<%= room.rentAmount.toLocaleString() %></td>
+                                            <td><%= room.size || 'N/A' %></td>
+                                            <td>
+                                                <% if (room.amenities) { %>
+                                                    <%= room.amenities %>
+                                                <% } else { %>
+                                                    <span class="text-muted">None specified</span>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <a href="/rooms/<%= room.id %>" class="btn btn-primary btn-sm">View</a>
+                                                <a href="/leases/new?roomId=<%= room.id %>" class="btn btn-success btn-sm">Create Lease</a>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% }); %>
+
+                <!-- Summary Table -->
+                <div class="vacancy-summary-table">
+                    <h2>Vacancy Summary by Property</h2>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Vacant Rooms</th>
+                                    <th>Potential Monthly Revenue</th>
+                                    <th>Average Rent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% Object.keys(vacancyByProperty).forEach(propertyName => { %>
+                                    <% 
+                                        const rooms = vacancyByProperty[propertyName];
+                                        const totalRent = rooms.reduce((sum, r) => sum + r.rentAmount, 0);
+                                        const avgRent = rooms.length > 0 ? totalRent / rooms.length : 0;
+                                    %>
+                                    <tr>
+                                        <td><strong><%= propertyName %></strong></td>
+                                        <td><%= rooms.length %></td>
+                                        <td class="text-success">₹<%= totalRent.toLocaleString() %></td>
+                                        <td>₹<%= Math.round(avgRent).toLocaleString() %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-total">
+                                    <td><strong>Total</strong></td>
+                                    <td><strong><%= vacantRooms.length %></strong></td>
+                                    <td><strong>₹<%= vacantRooms.reduce((sum, r) => sum + r.rentAmount, 0).toLocaleString() %></strong></td>
+                                    <td><strong>₹<%= Math.round(vacantRooms.reduce((sum, r) => sum + r.rentAmount, 0) / vacantRooms.length).toLocaleString() %></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            <% } %>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>

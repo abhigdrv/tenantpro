@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Revenue Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filters {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .filters form {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .filter-group {
+            flex: 1;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .summary-card h4 {
+            margin: 0 0 10px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .summary-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .chart-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <%- include('../partials/sidebar') %>
+        <section class="content">
+            <div class="report-header">
+                <h2>Revenue Report</h2>
+                <a href="/agent/reports/export/revenue?startDate=<%= startDate %>&endDate=<%= endDate %>" class="btn btn-success">
+                    📥 Export CSV
+                </a>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <form action="/agent/reports/revenue" method="GET">
+                    <div class="filter-group">
+                        <label>Start Date</label>
+                        <input type="date" name="startDate" value="<%= startDate %>" required>
+                    </div>
+                    <div class="filter-group">
+                        <label>End Date</label>
+                        <input type="date" name="endDate" value="<%= endDate %>" required>
+                    </div>
+                    <button type="submit" class="btn">Apply Filter</button>
+                </form>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h4>Total Revenue</h4>
+                    <div class="value">₹<%= totalRevenue.toLocaleString() %></div>
+                </div>
+                <div class="summary-card">
+                    <h4>Total Payments</h4>
+                    <div class="value" style="color: #007bff;"><%= payments.length %></div>
+                </div>
+                <div class="summary-card">
+                    <h4>Average Payment</h4>
+                    <div class="value" style="color: #17a2b8;">
+                        ₹<%= payments.length > 0 ? (totalRevenue / payments.length).toLocaleString(undefined, {maximumFractionDigits: 0}) : 0 %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue by Property Chart -->
+            <div class="chart-section">
+                <h3>Revenue by Property</h3>
+                <canvas id="revenueByPropertyChart"></canvas>
+            </div>
+
+            <!-- Payments Table -->
+            <h3 style="margin-bottom: 15px;">Payment Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Tenant</th>
+                        <th>Property</th>
+                        <th>Room</th>
+                        <th>Amount</th>
+                        <th>Payment For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (payments.length > 0) { %>
+                        <% payments.forEach(payment => { %>
+                            <tr>
+                                <td><%= payment.paymentDate.toLocaleDateString() %></td>
+                                <td><%= payment.lease.tenant.firstName %> <%= payment.lease.tenant.lastName %></td>
+                                <td><%= payment.lease.room.property.name %></td>
+                                <td><%= payment.lease.room.roomNumber %></td>
+                                <td style="color: #28a745; font-weight: bold;">₹<%= payment.amount.toLocaleString() %></td>
+                                <td><%= payment.paymentForMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 30px; color: #999;">
+                                No payments found for the selected period.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 20px;">
+                <a href="/agent/reports" class="btn" style="background: #6c757d;">← Back to Dashboard</a>
+            </div>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+
+    <script>
+        // Revenue by Property Chart
+        const propertyCtx = document.getElementById('revenueByPropertyChart').getContext('2d');
+        const revenueByProperty = <%= JSON.stringify(revenueByProperty) %>;
+        
+        const propertyChart = new Chart(propertyCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(revenueByProperty),
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: Object.values(revenueByProperty),
+                    backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
