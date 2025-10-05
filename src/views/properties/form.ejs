@@ -10,7 +10,7 @@
         <%- include('../partials/sidebar') %>
         <section class="content">
             <h2><%= title %></h2>
-            <form action="/properties/<%= property ? property.id + '/edit' : '' %>" method="POST">
+            <form action="/agent/properties/<%= property ? property.id + '/edit' : '' %>" method="POST">
                 <div class="form-group">
                     <label for="name">Property Name:</label>
                     <input type="text" name="name" id="name" value="<%= property ? property.name : '' %>" required>

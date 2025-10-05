@@ -18,8 +18,8 @@
                 <p><strong>Date:</strong> <%= payment.paymentDate.toLocaleDateString() %></p>
                 <p><strong>Status:</strong> <%= payment.status %></p>
             </div>
-            <a href="/payments/<%= payment.id %>/edit" class="btn">Edit Record</a>
-            <a href="/payments" class="btn">Back to Payments</a>
+            <a href="/agent/payments/<%= payment.id %>/edit" class="btn">Edit Record</a>
+            <a href="/agent/payments" class="btn">Back to Payments</a>
         </section>
     </main>
     <%- include('../partials/footer') %>

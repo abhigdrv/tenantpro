@@ -10,7 +10,7 @@
         <%- include('../partials/sidebar') %>
         <section class="content">
             <h2><%= title %></h2>
-            <form action="/maintenance/<%= request ? request.id + '/edit' : '' %>" method="POST">
+            <form action="/agent/maintenance/<%= request ? request.id + '/edit' : '' %>" method="POST">
                 <div class="form-group">
                     <label for="tenantId">Tenant:</label>
                     <select name="tenantId" id="tenantId" required>

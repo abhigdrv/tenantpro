@@ -76,7 +76,7 @@ router.post('/login', async (req, res) => {
     }
 
     req.session.userId = user.id;
-    res.redirect('/dashboard');
+    res.redirect('/');
 });
 
 // GET /register - Registration Page
@@ -99,7 +99,7 @@ router.post('/register', async (req, res) => {
             },
         });
         req.session.userId = newUser.id;
-        res.redirect('/dashboard');
+        res.redirect('/agent/dashboard');
     } catch (error) {
         res.render('auth/register', { error: 'Email already exists.' });
     }

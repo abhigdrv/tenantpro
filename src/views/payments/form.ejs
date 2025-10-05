@@ -10,7 +10,7 @@
         <%- include('../partials/sidebar') %>
         <section class="content">
             <h2><%= title %></h2>
-            <form action="/payments/<%= payment ? payment.id + '/edit' : '' %>" method="POST">
+            <form action="/agent/payments/<%= payment ? payment.id + '/edit' : '' %>" method="POST">
                 <div class="form-group">
                     <label for="leaseId">Lease Agreement:</label>
                     <select name="leaseId" id="leaseId" required>

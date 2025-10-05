@@ -9,7 +9,7 @@
     <main>
         <%- include('../partials/sidebar') %>
         <section class="content">
-            <h2>Maintenance Requests <a href="/maintenance/new" class="btn">Submit New Request</a></h2>
+            <h2>Maintenance Requests <a href="/agent/maintenance/new" class="btn">Submit New Request</a></h2>
             <table>
                 <thead>
                     <tr>
@@ -30,9 +30,9 @@
                             <td><%= request.priority %></td>
                             <td><%= request.status %></td>
                             <td>
-                                <a href="/maintenance/<%= request.id %>">View</a>
-                                <a href="/maintenance/<%= request.id %>/edit">Edit</a>
-                                <form action="/maintenance/<%= request.id %>/delete" method="post" style="display:inline;">
+                                <a href="/agent/maintenance/<%= request.id %>">View</a>
+                                <a href="/agent/maintenance/<%= request.id %>/edit">Edit</a>
+                                <form action="/agent/maintenance/<%= request.id %>/delete" method="post" style="display:inline;">
                                     <button type="submit" class="btn-delete">Delete</button>
                                 </form>
                             </td>

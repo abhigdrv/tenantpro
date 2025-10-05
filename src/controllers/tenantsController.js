@@ -25,7 +25,7 @@ exports.createTenant = async (req, res) => {
                 dob: dob ? new Date(dob) : null,
             },
         });
-        res.redirect('/tenants');
+        res.redirect('/agent/tenants');
     } catch (error) {
         console.error(error);
         if (error.code === 'P2002') { // Prisma error code for unique constraint violation
@@ -69,7 +69,7 @@ exports.updateTenant = async (req, res) => {
                 dob: dob ? new Date(dob) : null,
             },
         });
-        res.redirect(`/tenants/${req.params.id}`);
+        res.redirect(`/agent/tenants/${req.params.id}`);
     } catch (error) {
         console.error(error);
         if (error.code === 'P2002') {
@@ -82,7 +82,7 @@ exports.updateTenant = async (req, res) => {
 exports.deleteTenant = async (req, res) => {
     try {
         await prisma.tenant.delete({ where: { id: parseInt(req.params.id) } });
-        res.redirect('/tenants');
+        res.redirect('/agent/tenants');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error deleting tenant.');

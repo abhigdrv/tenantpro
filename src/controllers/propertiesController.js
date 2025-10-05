@@ -26,7 +26,7 @@ exports.createProperty = async (req, res) => {
                 description,
             },
         });
-        res.redirect('/properties');
+        res.redirect('/agent/properties');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error creating property.');
@@ -68,7 +68,7 @@ exports.updateProperty = async (req, res) => {
                 description,
             },
         });
-        res.redirect(`/properties/${req.params.id}`);
+        res.redirect(`/agent/properties/${req.params.id}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error updating property.');
@@ -78,7 +78,7 @@ exports.updateProperty = async (req, res) => {
 exports.deleteProperty = async (req, res) => {
     try {
         await prisma.property.delete({ where: { id: parseInt(req.params.id) } });
-        res.redirect('/properties');
+        res.redirect('/agent/properties');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error deleting property.');
@@ -106,7 +106,7 @@ exports.createRoom = async (req, res) => {
                 rentAmount: parseFloat(rentAmount),
             },
         });
-        res.redirect(`/properties/${propertyId}`);
+        res.redirect(`/agent/properties/${propertyId}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error creating room.');
@@ -137,7 +137,7 @@ exports.updateRoom = async (req, res) => {
                 status,
             },
         });
-        res.redirect(`/properties/${req.params.id}`);
+        res.redirect(`/agent/properties/${req.params.id}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error updating room.');
@@ -148,7 +148,7 @@ exports.deleteRoom = async (req, res) => {
     const roomId = parseInt(req.params.roomId);
     try {
         await prisma.room.delete({ where: { id: roomId } });
-        res.redirect(`/properties/${req.params.id}`);
+        res.redirect(`/agent/properties/${req.params.id}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error deleting room.');

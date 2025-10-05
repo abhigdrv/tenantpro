@@ -12,7 +12,10 @@ exports.listLeases = async (req, res) => {
 exports.newLeaseForm = async (req, res) => {
     const tenants = await prisma.tenant.findMany();
     const rooms = await prisma.room.findMany({
-        where: { status: 'vacant' }
+        where: { status: 'vacant' },
+        include: {
+            property: true
+        }
     });
     res.render('leases/form', { lease: null, tenants, rooms, title: 'Add New Lease' });
 };
@@ -34,7 +37,7 @@ exports.createLease = async (req, res) => {
             where: { id: parseInt(roomId) },
             data: { status: 'occupied' },
         });
-        res.redirect('/leases');
+        res.redirect('/agent/leases');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error creating lease.');
@@ -80,7 +83,7 @@ exports.updateLease = async (req, res) => {
                 depositPaid: parseFloat(depositPaid),
             },
         });
-        res.redirect(`/leases/${req.params.id}`);
+        res.redirect(`/agent/leases/${req.params.id}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error updating lease.');
@@ -96,5 +99,5 @@ exports.deleteLease = async (req, res) => {
         });
         await prisma.lease.delete({ where: { id: parseInt(req.params.id) } });
     }
-    res.redirect('/leases');
+    res.redirect('/agent/leases');
 };

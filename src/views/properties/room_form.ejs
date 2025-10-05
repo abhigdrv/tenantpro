@@ -10,7 +10,7 @@
         <%- include('../partials/sidebar') %>
         <section class="content">
             <h2><%= title %> for <%= property.name %></h2>
-            <form action="/properties/<%= property.id %>/rooms/<%= room ? room.id + '/edit' : '' %>" method="POST">
+            <form action="/agent/properties/<%= property.id %>/rooms/<%= room ? room.id + '/edit' : '' %>" method="POST">
                 <div class="form-group">
                     <label for="roomNumber">Room Number:</label>
                     <input type="text" name="roomNumber" id="roomNumber" value="<%= room ? room.roomNumber : '' %>" required>

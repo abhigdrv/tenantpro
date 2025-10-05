@@ -9,7 +9,7 @@
     <main>
         <%- include('../partials/sidebar') %>
         <section class="content">
-            <h2>Lease Agreements <a href="/leases/new" class="btn btn-primary">
+            <h2>Lease Agreements <a href="/agent/leases/new" class="btn btn-primary">
     <i data-lucide="file-plus"></i>
     <span>Create Lease</span>
 </a></h2>
@@ -33,9 +33,9 @@
                             <td><%= lease.endDate.toLocaleDateString() %></td>
                             <td>$<%= lease.rentAmount.toFixed(2) %></td>
                             <td>
-                                <a href="/leases/<%= lease.id %>">View</a>
-                                <a href="/leases/<%= lease.id %>/edit">Edit</a>
-                                <form action="/leases/<%= lease.id %>/delete" method="post" style="display:inline;">
+                                <a href="/agent/leases/<%= lease.id %>">View</a>
+                                <a href="/agent/leases/<%= lease.id %>/edit">Edit</a>
+                                <form action="/agent/leases/<%= lease.id %>/delete" method="post" style="display:inline;">
                                     <button type="submit" class="btn-delete">Delete</button>
                                 </form>
                             </td>

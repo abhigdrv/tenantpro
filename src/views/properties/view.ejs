@@ -17,7 +17,7 @@
                 <p><strong>Description:</strong> <%= property.description %></p>
             </div>
             
-            <h3>Rooms <a href="/properties/<%= property.id %>/rooms/new" class="btn">Add New Room</a></h3>
+            <h3>Rooms <a href="/agent/properties/<%= property.id %>/rooms/new" class="btn">Add New Room</a></h3>
             <% if (property.rooms.length > 0) { %>
                 <table>
                     <thead>
@@ -52,8 +52,8 @@
                                 </td>
                                 <td>$<%= room.rentAmount.toFixed(2) %></td>
                                 <td>
-                                    <a href="/properties/<%= property.id %>/rooms/<%= room.id %>/edit">Edit</a>
-                                    <form action="/properties/<%= property.id %>/rooms/<%= room.id %>/delete" method="post" style="display:inline;">
+                                    <a href="/agent/properties/<%= property.id %>/rooms/<%= room.id %>/edit">Edit</a>
+                                    <form action="/agent/properties/<%= property.id %>/rooms/<%= room.id %>/delete" method="post" style="display:inline;">
                                         <button type="submit" class="btn-delete">Delete</button>
                                     </form>
                                 </td>
@@ -64,8 +64,8 @@
             <% } else { %>
                 <p>No rooms found for this property. Add one now!</p>
             <% } %>
-            
-            <a href="/properties" class="btn btn-secondary">
+            <br/>
+            <a href="/agent/properties" class="btn btn-secondary">
     <i data-lucide="arrow-left"></i>
     <span>Back to Properties</span>
 </a>

@@ -42,7 +42,7 @@ exports.createPayment = async (req, res) => {
                 status: status,
             },
         });
-        res.redirect('/payments');
+        res.redirect('/agent/payments');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error recording payment.');
@@ -95,7 +95,7 @@ exports.updatePayment = async (req, res) => {
                 status: status,
             },
         });
-        res.redirect(`/payments/${req.params.id}`);
+        res.redirect(`/agent/payments/${req.params.id}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error updating payment.');
@@ -105,7 +105,7 @@ exports.updatePayment = async (req, res) => {
 exports.deletePayment = async (req, res) => {
     try {
         await prisma.payment.delete({ where: { id: parseInt(req.params.id) } });
-        res.redirect('/payments');
+        res.redirect('/agent/payments');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error deleting payment.');

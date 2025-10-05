@@ -19,8 +19,8 @@
                 <p><strong>Status:</strong> <%= request.status %></p>
                 <p><strong>Submitted On:</strong> <%= request.createdAt.toLocaleDateString() %></p>
             </div>
-            <a href="/maintenance/<%= request.id %>/edit" class="btn">Edit Request</a>
-            <a href="/maintenance" class="btn">Back to Requests</a>
+            <a href="/agent/maintenance/<%= request.id %>/edit" class="btn">Edit Request</a>
+            <a href="/agent/maintenance" class="btn">Back to Requests</a>
         </section>
     </main>
     <%- include('../partials/footer') %>

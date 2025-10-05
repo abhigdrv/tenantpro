@@ -39,12 +39,12 @@ const requireAuth = (req, res, next) => {
 };
 
 app.use('/', authRoutes);
-app.use('/dashboard', requireAuth, dashboardRoutes);
-app.use('/properties', requireAuth, propertyRoutes);
-app.use('/tenants', requireAuth, tenantRoutes);
-app.use('/leases', requireAuth, leaseRoutes);
-app.use('/payments', requireAuth, paymentRoutes);
-app.use('/maintenance', requireAuth, maintenanceRoutes);
+app.use('/agent/dashboard', requireAuth, dashboardRoutes);
+app.use('/agent/properties', requireAuth, propertyRoutes);
+app.use('/agent/tenants', requireAuth, tenantRoutes);
+app.use('/agent/leases', requireAuth, leaseRoutes);
+app.use('/agent/payments', requireAuth, paymentRoutes);
+app.use('/agent/maintenance', requireAuth, maintenanceRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

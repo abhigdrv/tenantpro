@@ -34,7 +34,7 @@ exports.createRequest = async (req, res) => {
                 status: 'open',
             },
         });
-        res.redirect('/maintenance');
+        res.redirect('/agent/maintenance');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error submitting maintenance request.');
@@ -81,7 +81,7 @@ exports.updateRequest = async (req, res) => {
                 status,
             },
         });
-        res.redirect(`/maintenance/${req.params.id}`);
+        res.redirect(`/agent/maintenance/${req.params.id}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error updating maintenance request.');
@@ -91,7 +91,7 @@ exports.updateRequest = async (req, res) => {
 exports.deleteRequest = async (req, res) => {
     try {
         await prisma.maintenanceRequest.delete({ where: { id: parseInt(req.params.id) } });
-        res.redirect('/maintenance');
+        res.redirect('/agent/maintenance');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error deleting maintenance request.');

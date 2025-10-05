@@ -9,7 +9,7 @@
     <main>
         <%- include('../partials/sidebar') %>
         <section class="content">
-            <h2>Payment Records <a href="/payments/new" class="btn">Record New Payment</a></h2>
+            <h2>Payment Records <a href="/agent/payments/new" class="btn">Record New Payment</a></h2>
             <table>
                 <thead>
                     <tr>
@@ -44,15 +44,15 @@
     </span>
 <% } %></td>
                             <td class="inline-flex">
-                                <a href="/payments/<%= payment.id %>" class="btn btn-sm btn-secondary">
+                                <a href="/agent/payments/<%= payment.id %>" class="btn btn-sm btn-secondary">
     <i data-lucide="eye"></i>
     <span>View</span>
 </a>
-                                <a href="/payments/<%= payment.id %>/edit" class="btn btn-sm btn-secondary">
+                                <a href="/agent/payments/<%= payment.id %>/edit" class="btn btn-sm btn-secondary">
     <i data-lucide="edit"></i>
     <span>Edit</span>
 </a>
-                                <form action="/payments/<%= payment.id %>/delete" method="post" style="display:inline;">
+                                <form action="/agent/payments/<%= payment.id %>/delete" method="post" style="display:inline;">
                                     <button type="submit" class="btn btn-sm btn-delete">
     <i data-lucide="trash-2"></i>
     <span>Delete</span>
