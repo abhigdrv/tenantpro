@@ -98,3 +98,15 @@ model MaintenanceRequest {
   status      String   @default("open")
   createdAt   DateTime @default(now())
 }
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  message   String   @db.Text
+  status    String   @default("unread")  // 'unread', 'read', 'responded'
+  createdAt DateTime @default(now())
+  readAt    DateTime?
+  notes     String?  @db.Text  // For internal notes by staff
+}

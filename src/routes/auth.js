@@ -5,6 +5,114 @@ const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
+// Contact form submission handler
+router.post('/contact', async (req, res) => {
+    try {
+        const { name, email, phone, message } = req.body;
+
+        // Validate required fields
+        if (!name || !email || !message) {
+            return res.render('index', {
+                properties: await prisma.property.findMany({
+                    include: { rooms: true }
+                }),
+                filters: {},
+                contactError: 'Please fill in all required fields.',
+                contactSuccess: false
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.render('index', {
+                properties: await prisma.property.findMany({
+                    include: { rooms: true }
+                }),
+                filters: {},
+                contactError: 'Please provide a valid email address.',
+                contactSuccess: false
+            });
+        }
+
+        // Here you can:
+        // 1. Save to database (create a ContactMessage model in Prisma)
+        // 2. Send email notification
+        // 3. Send to CRM system
+        // 4. Log for later review
+
+        // Example: Save to database (add ContactMessage model to your schema)
+        await prisma.contactMessage.create({
+            data: {
+                name,
+                email,
+                phone: phone || null,
+                message,
+                createdAt: new Date()
+            }
+        });
+
+        // Example: Send email notification using nodemailer (optional)
+        // const nodemailer = require('nodemailer');
+        // const transporter = nodemailer.createTransport({
+        //     service: 'gmail',
+        //     auth: {
+        //         user: process.env.EMAIL_USER,
+        //         pass: process.env.EMAIL_PASS
+        //     }
+        // });
+        // 
+        // await transporter.sendMail({
+        //     from: process.env.EMAIL_USER,
+        //     to: 'info@pgdhundho.com',
+        //     subject: `New Contact Form Submission from ${name}`,
+        //     html: `
+        //         <h2>New Contact Form Submission</h2>
+        //         <p><strong>Name:</strong> ${name}</p>
+        //         <p><strong>Email:</strong> ${email}</p>
+        //         <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+        //         <p><strong>Message:</strong></p>
+        //         <p>${message}</p>
+        //     `
+        // });
+
+        // For now, just log it
+        console.log('Contact form submission:', {
+            name,
+            email,
+            phone,
+            message,
+            timestamp: new Date()
+        });
+
+        // Redirect back to homepage with success message
+        // Use anchor to scroll to contact section
+        const properties = await prisma.property.findMany({
+            include: { rooms: true }
+        });
+
+        res.render('home/index', {
+            properties,
+            filters: {},
+            contactSuccess: true,
+            contactError: null
+        });
+
+    } catch (error) {
+        console.error('Contact form error:', error);
+        
+        const properties = await prisma.property.findMany({
+            include: { rooms: true }
+        });
+
+        res.render('home/index', {
+            properties,
+            filters: {},
+            contactError: 'An error occurred. Please try again later.',
+            contactSuccess: false
+        });
+    }
+});
 
 // GET / - Redirect to login
 router.get('/', async (req, res) => {
@@ -33,7 +141,9 @@ router.get('/', async (req, res) => {
     
     res.render('home/index', { 
         properties: filteredProperties, 
-        filters: req.query 
+        filters: req.query,
+        contactSuccess: false,
+        contactError: null
     });
 });
 
@@ -63,7 +173,7 @@ router.get('/properties/:id', async (req, res) => {
 
 // GET /login - Login Page
 router.get('/login', (req, res) => {
-    res.render('auth/login', { error: req.query.error });
+    res.render('auth/login', { error: req.query.error || '', redirect: req.query.redirect || '' });
 });
 
 // POST /login - Handle Login
@@ -76,7 +186,9 @@ router.post('/login', async (req, res) => {
     }
 
     req.session.userId = user.id;
-    res.redirect('/');
+    const redirectUrl = req.query.redirect || '/';
+
+    res.redirect(redirectUrl);
 });
 
 // GET /register - Registration Page

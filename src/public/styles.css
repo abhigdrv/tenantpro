@@ -699,3 +699,6 @@ body {
 .lucide { width: 18px; height: 18px; }
 
 .inline-flex { display: inline-flex; align-items: center; gap: 0.5rem; }
+.cursor-pointer{
+    cursor: pointer;
+}

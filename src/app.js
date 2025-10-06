@@ -30,12 +30,14 @@ const leaseRoutes = require('./routes/leases');
 const paymentRoutes = require('./routes/payments');
 const maintenanceRoutes = require('./routes/maintenance');
 const reportRoutes = require('./routes/reports');
+const contactRoutes = require('./routes/contact');
 
 const requireAuth = (req, res, next) => {
     if (req.session.userId) {
         next();
     } else {
-        res.redirect('/login');
+        const redirectUrl = encodeURIComponent(req.originalUrl);
+        res.redirect(`/login?redirect=${redirectUrl}`);
     }
 };
 
@@ -47,6 +49,7 @@ app.use('/agent/leases', requireAuth, leaseRoutes);
 app.use('/agent/payments', requireAuth, paymentRoutes);
 app.use('/agent/maintenance', requireAuth, maintenanceRoutes);
 app.use('/agent/reports', requireAuth, reportRoutes);
+app.use('/agent/contacts', requireAuth, contactRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
